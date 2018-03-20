@@ -19,9 +19,11 @@ public class XLSXReader {
 
     int sheetNumber = 4;
 
-    public void readXLSXFile(File xlsxFile) throws IOException {
+    public TwoDimensionalArrayList readXLSXFile(File xlsxFile) throws IOException {
         InputStream ExcelFileToRead = new FileInputStream(xlsxFile);
         XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
+
+        TwoDimensionalArrayList<String> xlsxList = new TwoDimensionalArrayList<>();
 
         XSSFWorkbook test = new XSSFWorkbook();
 
@@ -31,17 +33,28 @@ public class XLSXReader {
 
         Iterator rows = sheet.rowIterator();
 
+        int rowCount = 0;
+
+
         while (rows.hasNext()) {
-            int rowCount = 0;
+
             row = (XSSFRow) rows.next();
             Iterator cells = row.cellIterator();
+            int columnCount = 0;
             while (cells.hasNext()) {
-                cell = (XSSFCell) cells.next();
-                System.out.print(cell.toString() + " ");
-            }
-            System.out.println();
-        }
 
+                cell = (XSSFCell) cells.next();
+                xlsxList.addToInnerArray(rowCount, columnCount, cell.toString());
+                columnCount++;
+            }
+            rowCount++;
+        }
+//        for (int x = 0; x < xlsxList.size(); x++) {
+//            for (int y = 0; y < xlsxList.get(x).size(); y++)
+//                System.out.print(xlsxList.getFromInnerArray(x, y));
+//            System.out.println();
+//        }
+        return xlsxList;
     }
 
 
