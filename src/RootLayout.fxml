@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.BorderPane?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
-            prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            prefWidth="700.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="Controller">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
@@ -41,14 +41,15 @@
             <items>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                     <children>
-                        <TextField fx:id="fileOriginTextField" layoutY="14.0" AnchorPane.leftAnchor="5.0"
+                        <TextField fx:id="fileOriginTextField" layoutY="14.0" AnchorPane.leftAnchor="10.0"
                                    AnchorPane.topAnchor="10.0"/>
                         <Button fx:id="fileChooserButton" layoutX="165.0" layoutY="10.0" mnemonicParsing="false"
-                                onAction="#chooseFile" text="Choose .xlsx"/>
-                        <TextField fx:id="destinationTextField" layoutX="5.0" layoutY="47.0" AnchorPane.leftAnchor="5.0"
-                                   AnchorPane.topAnchor="47.0"/>
+                                onAction="#chooseFile" text="Choose .xlsx" AnchorPane.leftAnchor="205.0"/>
+                        <TextField fx:id="destinationTextField" layoutX="5.0" layoutY="47.0"
+                                   AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="47.0"/>
                         <Button fx:id="pathChooserButton" layoutX="165.0" layoutY="47.0" mnemonicParsing="false"
-                                onAction="#chooseDestination" text="Choose destination" AnchorPane.topAnchor="47.0"/>
+                                onAction="#chooseDestination" text="Choose destination" AnchorPane.leftAnchor="205.0"
+                                AnchorPane.topAnchor="47.0"/>
                     </children>
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
@@ -64,8 +65,13 @@
                         <TextField fx:id="passwordCategoryTextField" layoutX="10.0" layoutY="107.0"
                                    text="Active Directory" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="107.0"/>
                         <Button fx:id="executeButton" layoutX="147.0" layoutY="333.0" mnemonicParsing="false"
-                                onAction="#extractFromXLSXToCSV" text="Export xlsx into CSV"
-                                AnchorPane.bottomAnchor="7.0" AnchorPane.rightAnchor="5.0"/>
+                                onAction="#start" text="Export xlsx into CSV" AnchorPane.bottomAnchor="7.0"
+                                AnchorPane.rightAnchor="5.0"/>
+                        <Label fx:id="progressLabel" layoutX="250.0" layoutY="313.0" styleClass="progressLabel"
+                               stylesheets="@style.css" text="Exporting..." visible="false"
+                               AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="5.0"/>
+                        <Label fx:id="finishedLabel" layoutX="278.0" layoutY="315.0" text="Done!" visible="false"
+                               AnchorPane.bottomAnchor="40.0" AnchorPane.rightAnchor="5.0"/>
                     </children>
                 </AnchorPane>
             </items>

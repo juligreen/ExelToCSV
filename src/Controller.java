@@ -1,6 +1,9 @@
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -9,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.concurrent.TimeUnit;
 
 //TODO: make Textfield editable and make them change the  actual  Filepath
 public class Controller {
@@ -29,6 +33,10 @@ public class Controller {
     private CheckBox passwordLastSetCheckBox;
     @FXML
     private TextField passwordCategoryTextField;
+    @FXML
+    private Label progressLabel;
+    @FXML
+    private Label finishedLabel;
 
 
     private MainApp mainApp;
@@ -37,16 +45,30 @@ public class Controller {
     private File destinationPath;
 
     private TwoDimensionalArrayList xlsxList;
+    Service service = new ProcessService();
 
-
-    public Controller() {
+    public void start() {
+        progressLabel.setVisible(true);
+        if (!service.isRunning()) {
+            service.start();
+        }
+        service.setOnSucceeded(event -> {
+            progressLabel.setVisible(false);
+            finishedLabel.setVisible(true);
+        });
 
     }
+
 
     public void extractFromXLSXToCSV() {
         try {
             createCSV(tranferDataFromXLSXToArrayList());
         } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
@@ -116,14 +138,18 @@ public class Controller {
         fileChooser.setTitle("Choose xlsx file");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Exel Spreadsheet", "*.xlsx"));
         File xlsxFile = fileChooser.showOpenDialog(null);
-        this.setXlsxFile(xlsxFile);
+        if (xlsxFile != null) {
+            this.setXlsxFile(xlsxFile);
+        }
     }
 
     public void chooseDestination() {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Select destination folder");
         File destinationPath = chooser.showDialog(null);
-        this.setDestinationPath(destinationPath);
+        if (destinationPath != null) {
+            this.setDestinationPath(destinationPath);
+        }
     }
 
     public TextField getDestinationTextField() {
@@ -175,5 +201,27 @@ public class Controller {
 
     public void setXlsxList(TwoDimensionalArrayList xlsxList) {
         this.xlsxList = xlsxList;
+    }
+
+    public Label getProgressLabel() {
+        return progressLabel;
+    }
+
+    public Label getFinishedLabel() {
+        return finishedLabel;
+    }
+
+    class ProcessService extends Service<Void> {
+
+        @Override
+        protected Task<Void> createTask() {
+            return new Task<Void>() {
+                @Override
+                protected Void call() {
+                    extractFromXLSXToCSV();
+                    return null;
+                }
+            };
+        }
     }
 }
